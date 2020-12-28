@@ -7,6 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generator.StaticPropertyEnu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generator.StaticPropertyEnum.Tests", "Generator.StaticPropertyEnum.Tests\Generator.StaticPropertyEnum.Tests.csproj", "{B0479D6C-70D2-46F0-9F31-AB9B7932D7FC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{4CE68308-ACC8-49F6-8ACC-4F2BF22CE8E1}"
+	ProjectSection(SolutionItems) = preProject
+		ReadMe.md = ReadMe.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

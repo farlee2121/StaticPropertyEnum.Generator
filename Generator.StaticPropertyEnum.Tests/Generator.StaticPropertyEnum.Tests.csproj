@@ -22,6 +22,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Generator.StaticPropertyEnum\Generator.StaticPropertyEnum.csproj"  OutputItemType="Analyzer" ReferenceOutputAssembly="true"/>
   </ItemGroup>
-  <!--<Import Project="..\Generator.StaticPropertyEnum\Generator.StaticPropertyEnum.csproj" />-->
 
 </Project>
