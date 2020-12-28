@@ -14,35 +14,42 @@ namespace Generator.StaticPropertyEnum
     {
     }
 
+    enum DeclarationType
+    {
+        Class,
+        Record,
+        Struct
+    }
+
+    record PropertyEnumCandidate(SyntaxNode SyntaxNode, DeclarationType DeclarationType, AttributeSyntax? AttributeNode);
+
     class StaticPropertyEnumSyntaxReciever : ISyntaxReceiver
     {
-        private List<SyntaxNode> _propertyEnumDeclarations = new List<SyntaxNode>();
-        public IReadOnlyCollection<SyntaxNode> PropertyEnumDeclarations => _propertyEnumDeclarations;
+        // IMPORTANT: Can't get type or fully-qualified names until we have the compilation
+        static readonly string[] AttributeNames = new[] { "StaticPropertyEnum", "StaticPropertyEnumAttribute" };
+        private List<PropertyEnumCandidate> _propertyEnumDeclarations = new List<PropertyEnumCandidate>();
+        public IReadOnlyCollection<PropertyEnumCandidate> PropertyEnumDeclarations => _propertyEnumDeclarations;
 
         private AttributeSyntax? TryGetPropertyEnumAttribute(SyntaxList<AttributeListSyntax> attrLists)
         {
             return attrLists
                 .SelectMany(l => l.Attributes)
-                .FirstOrDefault(attr => attr.Name.ToFullString() == nameof(StaticPropertyEnumAttribute));
+                .FirstOrDefault(attr => AttributeNames.Contains(attr.Name.ToFullString()));
         }
 
         public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
         {
-            var allowedTypes = new[] { SyntaxKind.ClassDeclaration, SyntaxKind.StructDeclaration, SyntaxKind.RecordDeclaration };
-
-            bool shouldAddNode = syntaxNode switch
+            var candidate = syntaxNode switch
             {
-                // I can 
-                ClassDeclarationSyntax dec => TryGetPropertyEnumAttribute(dec.AttributeLists) != null,
-                StructDeclarationSyntax dec => TryGetPropertyEnumAttribute(dec.AttributeLists) != null,
-                RecordDeclarationSyntax dec => TryGetPropertyEnumAttribute(dec.AttributeLists) != null,
-                _ => false
+                ClassDeclarationSyntax dec => new PropertyEnumCandidate(syntaxNode, DeclarationType.Class, TryGetPropertyEnumAttribute(dec.AttributeLists)),
+                StructDeclarationSyntax dec => new PropertyEnumCandidate(syntaxNode, DeclarationType.Struct, TryGetPropertyEnumAttribute(dec.AttributeLists)),
+                RecordDeclarationSyntax dec => new PropertyEnumCandidate(syntaxNode, DeclarationType.Record, TryGetPropertyEnumAttribute(dec.AttributeLists)),
+                _ => null
             };
 
-            if (shouldAddNode)
+            if (candidate?.AttributeNode != null)
             {
-                // It appears I can't check for attributes here
-                _propertyEnumDeclarations.Add(syntaxNode);
+                _propertyEnumDeclarations.Add(candidate);
             }
             else
             {
@@ -55,7 +62,20 @@ namespace Generator.StaticPropertyEnum
     public class StaticPropertyEnumGenerator : ISourceGenerator
     {
 
-        string GetPropertyEnumAddonSource(ITypeSymbol typeSymbol)
+
+        string GetGeneratedTypeKeyword(DeclarationType type)
+        {
+            //SOURCE: no type kind for records https://stackoverflow.com/questions/64077005/determine-whether-class-is-a-record-using-roslyn
+            return type switch
+            {
+                DeclarationType.Record  => "record",
+                DeclarationType.Class => "class",
+                DeclarationType.Struct => "struct",
+                _ => "impossible",
+            };
+        }
+
+        string GetPropertyEnumAddonSource(DeclarationType declarationType, ITypeSymbol typeSymbol)
         {
             // I don't think I need to split by record/class/struct
             // I want any static property or field of the same type as the containing type
@@ -71,12 +91,14 @@ namespace Generator.StaticPropertyEnum
 
             // consider moving this into a liquid file or similar
             var source = $@"
+                using System.Collections.Generic;
+                
                 namespace {typeSymbol.ContainingNamespace.ToDisplayString()}
                 {{
-                    public partial {nameof(typeSymbol.TypeKind)} {typeSymbol.Name}PropertyEnumExtensions
+                    public partial {GetGeneratedTypeKeyword(declarationType)} {typeSymbol.Name}
                     {{
                         public static IEnumerable<{typeSymbol.Name}> KnownValues(){{
-                            return new []{{{string.Join(", ", enumFields.Select(field => field.Name))} }}
+                            return new []{{{string.Join(", ", enumFields.Select(field => field.Name))} }};
                         }}
                     }}
                 }}                
@@ -90,14 +112,14 @@ namespace Generator.StaticPropertyEnum
             if (!(context.SyntaxReceiver is StaticPropertyEnumSyntaxReciever receiver)) return;
 
 
-            foreach (var node in receiver.PropertyEnumDeclarations)
+            foreach (var candidate in receiver.PropertyEnumDeclarations)
             {
                 // Note:  context.Compilation.GetSemanticModel().GetSymbolInfo() has an overload for getting symbols with a given attribute Syntax
                 // another approach is that I could find every reference to the attribute, and use that method to get the class declarations
-                var model = context.Compilation.GetSemanticModel(node.SyntaxTree);
-                var symbol = model.GetDeclaredSymbol(node, context.CancellationToken) as INamedTypeSymbol;
+                var model = context.Compilation.GetSemanticModel(candidate.SyntaxNode.SyntaxTree);
+                var symbol = model.GetDeclaredSymbol(candidate.SyntaxNode, context.CancellationToken) as INamedTypeSymbol;
                 var fileName = $"{symbol.ToDisplayString()}.generated.cs";
-                var source = GetPropertyEnumAddonSource(symbol);
+                var source = GetPropertyEnumAddonSource(candidate.DeclarationType, symbol);
                 context.AddSource(fileName, source);
             }
         }
@@ -105,7 +127,7 @@ namespace Generator.StaticPropertyEnum
         public void Initialize(GeneratorInitializationContext context)
         {
 #if DEBUG
-            if (!Debugger.IsAttached) Debugger.Launch();
+            //if (!Debugger.IsAttached) Debugger.Launch();
 #endif
             context.RegisterForSyntaxNotifications(() => new StaticPropertyEnumSyntaxReciever());
         }
