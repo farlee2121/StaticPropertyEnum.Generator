@@ -1,9 +1,10 @@
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Generator.StaticPropertyEnum.Tests
 {
-    //[StaticPropertyEnum]
+    [StaticPropertyEnum]
     public partial record Color
     {
         public string Id;
@@ -20,7 +21,7 @@ namespace Generator.StaticPropertyEnum.Tests
         public void Test1()
         {
             //Color.KnownValues();
-            Generated.HelloWorld.Hello.SayHello();
+            HelloWorld.Hello.SayHello();
         }
     }
 }

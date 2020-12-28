@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30709.132
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generator.StaticPropertyEnum", "Generator.StaticPropertyEnum\Generator.StaticPropertyEnum.csproj", "{F00D7B2F-C1D4-4ED8-94DD-74D56C732A46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generator.StaticPropertyEnum.Tests", "Generator.StaticPropertyEnum.Tests\Generator.StaticPropertyEnum.Tests.csproj", "{B0479D6C-70D2-46F0-9F31-AB9B7932D7FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generator.StaticPropertyEnum.Tests", "Generator.StaticPropertyEnum.Tests\Generator.StaticPropertyEnum.Tests.csproj", "{B0479D6C-70D2-46F0-9F31-AB9B7932D7FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
