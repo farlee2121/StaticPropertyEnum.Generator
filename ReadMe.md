@@ -44,7 +44,7 @@ IEnumerable<GolfClubTypes> clubs = GolfClubTypes.KnownValues();
 ```
 
 ## A few potential gotchas
-- The "enum" definition has to be partial
+- The member enum definition has to be partial because 
 - Currently doens't work on nested classes. It would require the whole hierarchy of classes to be partial. That seems smelly to me, so I decided not to support it. Let me know in the github issues if you have reasons I should change my mind.
 - Classes won't have value-based equality behavior by default, and structs don't define `==` by default. I recommend using records.
 	- You can use a generator like [Generator.Equals](https://github.com/diegofrata/Generator.Equals) if you still want a class or struct
@@ -56,5 +56,9 @@ IEnumerable<GolfClubTypes> clubs = GolfClubTypes.KnownValues();
 		- has the attribute, but isn't partial
 	- Consider a stronger attribute type check.
 	  -  I don't see a need to support inheritance, since there is no way for them to extend the attribute without making a new generator
+
+	!!! Could get rid of the partial requirement by instead auto-implementing an interface?? 
+		Nevermind. It'd still need to be partial becase the source must be added as a separate file
+		It would make it smoother if I decided to have a default version based on reflection. The reflection version wouldn't need partial.
  -->
 

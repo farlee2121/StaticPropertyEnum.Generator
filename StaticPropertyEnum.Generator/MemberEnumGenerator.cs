@@ -77,8 +77,13 @@ namespace StaticMemberEnum.Generator
             var enumFields = typeSymbol.GetMembers().Where(c =>
                 c switch
                 {
-                    IFieldSymbol field => field.IsStatic && field.Type.Equals(field.ContainingType, SymbolEqualityComparer.Default) && !field.IsImplicitlyDeclared,
-                    IPropertySymbol prop => prop.IsStatic && prop.Type.Equals(prop.ContainingType, SymbolEqualityComparer.Default),
+                    IFieldSymbol field => field.IsStatic
+                        && field.DeclaredAccessibility == Accessibility.Public
+                        && field.Type.Equals(field.ContainingType, SymbolEqualityComparer.Default)
+                        && !field.IsImplicitlyDeclared,
+                    IPropertySymbol prop => prop.IsStatic
+                        && prop.DeclaredAccessibility == Accessibility.Public
+                        && prop.Type.Equals(prop.ContainingType, SymbolEqualityComparer.Default),
                     _ => false
                 }
             );
