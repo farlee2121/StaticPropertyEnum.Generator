@@ -13,7 +13,7 @@
     <Authors>Spencer Farley</Authors>
     <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/farlee2121/StaticPropertyEnum.Generator</RepositoryUrl>
-    <PackageTags>dotnet;dotnet-standard;generator;source generator;</PackageTags>
+    <PackageTags>dotnet;dotnet-standard;generator;source-generator;</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
