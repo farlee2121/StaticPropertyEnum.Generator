@@ -4,6 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <PackageId>StaticMemberEnum.Generator</PackageId>
+    <Title>StaticMemberEnum.Generator</Title> 
+    <Description>
+      Auto-implement `.KnownValues()` from a type with static members as enum values. Like listing the predefined colors on `System.Drawing.Color`. 
+    </Description>
+    <Authors>Spencer Farley</Authors>
+    <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/farlee2121/StaticPropertyEnum.Generator</RepositoryUrl>
+    <PackageTags>dotnet;dotnet-standard;generator;source generator;</PackageTags>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Update="NETStandard.Library" PrivateAssets="all" GeneratePathProperty="true" />
@@ -12,6 +23,6 @@
   </ItemGroup>
   <ItemGroup>
     <!-- Package the generator in the analyzer directory of the nuget package -->
-    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 </Project>
