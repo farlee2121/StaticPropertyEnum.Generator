@@ -1,4 +1,5 @@
 # Static Property Enum Generator
+[![Nuget](https://img.shields.io/nuget/v/StaticMemberEnum.Generator)](https://www.nuget.org/packages/StaticMemberEnum.Generator)
 
 ## Why
 Enums are great, but often data has a fixed set of known values AND should allows for unknown values.
