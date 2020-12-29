@@ -50,15 +50,5 @@ IEnumerable<GolfClubTypes> clubs = GolfClubTypes.KnownValues();
 	- You can use a generator like [Generator.Equals](https://github.com/diegofrata/Generator.Equals) if you still want a class or struct
 	- Structs should only be used with very small values (under 16 bytes). See [the offical explanation](https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/choosing-between-class-and-struct)
 
-<!-- 
-	TODO: 
-	- Add analyzers that warn of potential issues 
-		- has the attribute, but isn't partial
-	- Consider a stronger attribute type check.
-	  -  I don't see a need to support inheritance, since there is no way for them to extend the attribute without making a new generator
 
-	!!! Could get rid of the partial requirement by instead auto-implementing an interface?? 
-		Nevermind. It'd still need to be partial becase the source must be added as a separate file
-		It would make it smoother if I decided to have a default version based on reflection. The reflection version wouldn't need partial.
- -->
 
