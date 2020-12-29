@@ -44,8 +44,8 @@ IEnumerable<GolfClubTypes> clubs = GolfClubTypes.KnownValues();
 ```
 
 ## A few potential gotchas
-- The member enum definition has to be partial because 
-- Currently doens't work on nested classes. It would require the whole hierarchy of classes to be partial. That seems smelly to me, so I decided not to support it. Let me know in the github issues if you have reasons I should change my mind.
+- The member enum definition has to be partial because source generators behave about the same as adding new sources files.  
+- This generator currently doesn't work on nested classes. It would require the whole hierarchy of classes to be partial. That seems smelly to me, so I decided not to support it. Let me know in the github issues if you have reasons I should change my mind.
 - Classes won't have value-based equality behavior by default, and structs don't define `==` by default. I recommend using records.
 	- You can use a generator like [Generator.Equals](https://github.com/diegofrata/Generator.Equals) if you still want a class or struct
 	- Structs should only be used with very small values (under 16 bytes). See [the offical explanation](https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/choosing-between-class-and-struct)
